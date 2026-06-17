@@ -11,20 +11,20 @@ import boto3
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
-from pydantic import BaseModel
 
+from common.base_classes import BaseReqDto, BaseRespDto
 from ingest.api.ingest_controller import router as ingest_router
 from end_points.api.end_points_controller import router as end_points_router
 from bootstrap import register_services
 
 
-class SearchReq(BaseModel):
+class SearchReq(BaseReqDto):
     """Request body for a file search."""
 
     query: str
 
 
-class SearchResp(BaseModel):
+class SearchResp(BaseRespDto):
     """Result of a file search."""
 
     results: list

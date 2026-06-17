@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from common.base_classes import BaseReqDto, BaseRespDto
 
 
-class IngestReq(BaseModel):
+class IngestReq(BaseReqDto):
     """Request to ingest a file into a vector store."""
 
     file_path: str
@@ -10,7 +10,7 @@ class IngestReq(BaseModel):
     target_vector_store: str = "openai"
 
 
-class IngestResp(BaseModel):
+class IngestResp(BaseRespDto):
     """Result of an ingestion request."""
 
     status: str

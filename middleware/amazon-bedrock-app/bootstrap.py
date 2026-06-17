@@ -1,35 +1,25 @@
 """Application bootstrap / composition root.
 
-Called once at startup. Every service implementation registers itself into the
-shared ObjectsFactory here, so the rest of the app resolves services by their
-interface name without ever importing a concrete Impl.
+Called once at startup. Importing the component modules below runs their
+``@component`` decorators, which declare each class's DI key and dependencies.
+``wire_components`` then instantiates them in dependency order and registers
+each into the shared ObjectsFactory.
 """
 
 import logging
 
+from common.di import wire_components
 from common.objects_factory import OBJECTS_FACTORY
-from end_points.dao.end_points_dao import EndPointsDaoImpl
-from end_points.service.end_points_svc import EndPointsServiceImpl
+
+# Import component modules so their @component decorators register the classes.
+# Add new DAO/service modules here for them to be wired at startup.
+import end_points.dao.end_points_dao  # noqa: F401
+import end_points.service.end_points_svc  # noqa: F401
 
 LOGGER = logging.getLogger(__name__)
 
-# DAOs register first because services resolve their DAO at registration time.
-DAO_IMPLS = [
-    EndPointsDaoImpl,
-]
-
-# Every service Impl that should self-register at startup. Add new ones here.
-SERVICE_IMPLS = [
-    EndPointsServiceImpl,
-]
-
 
 def register_services():
-    """Have every DAO and service implementation register itself (DAOs first)."""
-    for impl_cls in DAO_IMPLS:
-        impl_cls.register(OBJECTS_FACTORY)
-    for impl_cls in SERVICE_IMPLS:
-        impl_cls.register(OBJECTS_FACTORY)
-    LOGGER.info(
-        "Registered %d DAO(s) and %d service(s)", len(DAO_IMPLS), len(SERVICE_IMPLS)
-    )
+    """Wire every annotated component into the ObjectsFactory."""
+    count = wire_components(OBJECTS_FACTORY)
+    LOGGER.info("Registered %d component(s)", count)
