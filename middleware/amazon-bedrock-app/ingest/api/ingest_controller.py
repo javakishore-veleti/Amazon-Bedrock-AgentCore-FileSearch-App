@@ -4,8 +4,8 @@ import logging
 
 from fastapi import APIRouter, HTTPException
 
-from ingest.common.dtos import IngestReq, IngestResp
-from ingest.vector_store.openai_ingest_facade import OpenAIVectorStoreIngestFacade
+from common.dtos import IngestReq, IngestResp
+from vector_store import OpenAIVectorStoreIngestFacade
 
 logger = logging.getLogger(__name__)
 

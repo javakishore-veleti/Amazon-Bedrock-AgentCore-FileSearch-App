@@ -5,6 +5,7 @@ Main entry point for the Python backend service
 
 import os
 import logging
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 import boto3
 from fastapi import FastAPI
@@ -13,6 +14,8 @@ from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
 from ingest.api.ingest_controller import router as ingest_router
+from end_points.api.end_points_controller import router as end_points_router
+from bootstrap import register_services
 
 
 class SearchReq(BaseModel):
@@ -46,12 +49,20 @@ tags_metadata = [
     {"name": "ingest", "description": "Ingest files into a vector store."},
 ]
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup/shutdown hooks. Registers service implementations at startup."""
+    register_services()
+    yield
+
+
 # Initialize FastAPI app
 app = FastAPI(
     title="Amazon Bedrock Agent Core File Search",
     description="API for intelligent file search using Bedrock agents",
     version="1.0.0",
     openapi_tags=tags_metadata,
+    lifespan=lifespan,
 )
 
 # CORS configuration
@@ -65,6 +76,7 @@ app.add_middleware(
 
 # Register controllers / routers
 app.include_router(ingest_router)
+app.include_router(end_points_router)
 
 # AWS Bedrock client
 bedrock_client = None
