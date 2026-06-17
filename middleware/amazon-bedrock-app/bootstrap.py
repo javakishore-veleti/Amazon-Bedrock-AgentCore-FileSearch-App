@@ -20,7 +20,7 @@ from configs.end_points_master import END_POINTS_BY_NAME
 import common.caching.service.app_cache_svc  # noqa: F401
 import end_points.dao.end_points_dao  # noqa: F401
 import end_points.service.end_points_svc  # noqa: F401
-import vector_store.openai_ingest_facade  # noqa: F401
+import vector_store.adapters.openai_ingest_facade  # noqa: F401
 import vector_store.service.ingest_svc  # noqa: F401
 
 LOGGER = logging.getLogger(__name__)
