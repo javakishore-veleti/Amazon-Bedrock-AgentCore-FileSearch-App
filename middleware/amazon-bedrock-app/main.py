@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import boto3
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
 from ingest.api.ingest_controller import router as ingest_router
@@ -81,6 +82,12 @@ def initialize_bedrock_client():
     except Exception as e:
         logger.error(f"Failed to initialize Bedrock client: {e}")
         raise
+
+
+@app.get("/", include_in_schema=False)
+async def root():
+    """Redirect the root path to the Swagger UI."""
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/health", tags=["health"])
