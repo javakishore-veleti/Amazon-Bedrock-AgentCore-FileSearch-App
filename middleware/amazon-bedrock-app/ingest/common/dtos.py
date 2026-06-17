@@ -1,7 +1,19 @@
-class IngestReq:
-    def __init__(self, file_path, file_type):
-        self.file_path = file_path
-        self.file_type = file_type
-        self.target_vector_store = "openai"  # Default vector store, can be extended to support multiple stores
+from pydantic import BaseModel
 
-class         
+
+class IngestReq(BaseModel):
+    """Request to ingest a file into a vector store."""
+
+    file_path: str
+    file_type: str
+    # Default vector store, can be extended to support multiple stores.
+    target_vector_store: str = "openai"
+
+
+class IngestResp(BaseModel):
+    """Result of an ingestion request."""
+
+    status: str
+    target_vector_store: str
+    file_path: str
+    message: str

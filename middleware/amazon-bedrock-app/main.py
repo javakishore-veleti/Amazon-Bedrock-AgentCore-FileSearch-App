@@ -9,6 +9,23 @@ from dotenv import load_dotenv
 import boto3
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+from ingest.api.ingest_controller import router as ingest_router
+
+
+class SearchReq(BaseModel):
+    """Request body for a file search."""
+
+    query: str
+
+
+class SearchResp(BaseModel):
+    """Result of a file search."""
+
+    results: list
+    query: str
+    message: str
 
 # Load environment variables
 load_dotenv()
@@ -20,11 +37,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# OpenAPI tag metadata (controls grouping/order in Swagger UI)
+tags_metadata = [
+    {"name": "health", "description": "Service liveness checks."},
+    {"name": "files", "description": "List and retrieve searchable files."},
+    {"name": "search", "description": "Search files using the Bedrock agent."},
+    {"name": "ingest", "description": "Ingest files into a vector store."},
+]
+
 # Initialize FastAPI app
 app = FastAPI(
     title="Amazon Bedrock Agent Core File Search",
     description="API for intelligent file search using Bedrock agents",
-    version="1.0.0"
+    version="1.0.0",
+    openapi_tags=tags_metadata,
 )
 
 # CORS configuration
@@ -36,8 +62,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Register controllers / routers
+app.include_router(ingest_router)
+
 # AWS Bedrock client
 bedrock_client = None
+
 
 def initialize_bedrock_client():
     """Initialize AWS Bedrock client"""
@@ -52,18 +82,8 @@ def initialize_bedrock_client():
         logger.error(f"Failed to initialize Bedrock client: {e}")
         raise
 
-@app.on_event("startup")
-async def startup_event():
-    """Initialize services on startup"""
-    logger.info("Starting Amazon Bedrock Agent Core File Search App")
-    initialize_bedrock_client()
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cleanup on shutdown"""
-    logger.info("Shutting down application")
-
-@app.get("/health")
+@app.get("/health", tags=["health"])
 async def health_check():
     """Health check endpoint"""
     return {
@@ -72,7 +92,8 @@ async def health_check():
         "version": "1.0.0"
     }
 
-@app.get("/api/files")
+
+@app.get("/api/files", tags=["files"])
 async def list_files():
     """List available files for searching"""
     try:
@@ -85,27 +106,21 @@ async def list_files():
         logger.error(f"Error listing files: {e}")
         return {"error": str(e)}, 500
 
-@app.post("/api/search")
-async def search_files(query: dict):
+
+@app.post("/api/search", response_model=SearchResp, tags=["search"])
+async def search_files(req: SearchReq) -> SearchResp:
     """Search files using Bedrock agent"""
-    try:
-        search_query = query.get("query")
-        if not search_query:
-            return {"error": "Search query is required"}, 400
+    # TODO: Implement Bedrock agent invocation
+    logger.info(f"Received search query: {req.query}")
 
-        # TODO: Implement Bedrock agent invocation
-        logger.info(f"Received search query: {search_query}")
-        
-        return {
-            "results": [],
-            "query": search_query,
-            "message": "Search functionality not yet implemented"
-        }
-    except Exception as e:
-        logger.error(f"Error during search: {e}")
-        return {"error": str(e)}, 500
+    return SearchResp(
+        results=[],
+        query=req.query,
+        message="Search functionality not yet implemented",
+    )
 
-@app.get("/api/files/{file_id}")
+
+@app.get("/api/files/{file_id}", tags=["files"])
 async def get_file(file_id: str):
     """Retrieve specific file details"""
     try:
@@ -118,14 +133,15 @@ async def get_file(file_id: str):
         logger.error(f"Error retrieving file: {e}")
         return {"error": str(e)}, 500
 
+
 if __name__ == "__main__":
     import uvicorn
-    
+
     port = int(os.getenv('PYTHON_PORT', 8000))
     debug = os.getenv('DEBUG', 'false').lower() == 'true'
-    
+
     logger.info(f"Starting server on port {port} (debug: {debug})")
-    
+
     uvicorn.run(
         "main:app",
         host="0.0.0.0",

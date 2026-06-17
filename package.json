@@ -1,0 +1,13 @@
+{
+  "name": "amazon-bedrock-agentcore-filesearch-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Amazon Bedrock Agent Core file search app — task runner for local setup",
+  "scripts": {
+    "localhost:initial:setup": "npm run localhost:setup:python:venv",
+    "localhost:setup:python:venv": "python3.12 -m venv \"$HOME/runtime_data/python_venvs/Amazon-Bedrock-AgentCore-FileSearch-App\" && \"$HOME/runtime_data/python_venvs/Amazon-Bedrock-AgentCore-FileSearch-App/bin/pip\" install --upgrade pip && \"$HOME/runtime_data/python_venvs/Amazon-Bedrock-AgentCore-FileSearch-App/bin/pip\" install -r requirements.txt",
+    "localhost:daily:start": "\"$HOME/runtime_data/python_venvs/Amazon-Bedrock-AgentCore-FileSearch-App/bin/pip\" install -r requirements.txt && npm run localhost:python:venv:activate",
+    "localhost:python:venv:activate": "exec \"$SHELL\" -c 'source \"$HOME/runtime_data/python_venvs/Amazon-Bedrock-AgentCore-FileSearch-App/bin/activate\" && exec \"$SHELL\"'",
+    "localhost:middle:start-all": "cd middleware/amazon-bedrock-app && \"$HOME/runtime_data/python_venvs/Amazon-Bedrock-AgentCore-FileSearch-App/bin/python\" main.py"
+  }
+}
