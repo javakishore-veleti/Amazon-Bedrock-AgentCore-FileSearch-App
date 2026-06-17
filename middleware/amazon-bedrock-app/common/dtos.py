@@ -1,4 +1,15 @@
+from enum import Enum
+
 from common.base_classes import BaseReqDto, BaseRespDto
+from configs.end_points_master import END_POINTS_MASTER
+
+# Dropdown of valid vector store names, built from the master catalog so Swagger
+# shows a fixed list and invalid values are rejected (422) automatically.
+VectorStoreName = Enum(
+    "VectorStoreName",
+    {entry.name.replace(" ", "_"): entry.name for entry in END_POINTS_MASTER},
+    type=str,
+)
 
 
 class IngestReq(BaseReqDto):
@@ -6,8 +17,8 @@ class IngestReq(BaseReqDto):
 
     file_path: str
     file_type: str
-    # Target vector store: an end point name from configs.end_points_master.
-    target_vector_store: str = "OpenAPI Vector Store"
+    # Target vector store: one of the predefined end point names.
+    target_vector_store: VectorStoreName = VectorStoreName(END_POINTS_MASTER[0].name)
 
 
 class IngestResp(BaseRespDto):
