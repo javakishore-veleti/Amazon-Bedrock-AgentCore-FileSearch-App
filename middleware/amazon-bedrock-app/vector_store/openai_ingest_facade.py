@@ -1,5 +1,10 @@
+from common.di import component
+from configs.end_points_master import OPENAPI_VECTOR_STORE
+
+
+@component(key=OPENAPI_VECTOR_STORE)
 class OpenAIVectorStoreIngestFacade:
-    def __init__(self, vector_store_client):
+    def __init__(self, vector_store_client=None):
         self.vector_store_client = vector_store_client
 
     def ingest(self, documents):

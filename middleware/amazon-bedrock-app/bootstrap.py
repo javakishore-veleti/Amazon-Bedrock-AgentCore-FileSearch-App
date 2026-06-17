@@ -12,9 +12,10 @@ from common.di import wire_components
 from common.objects_factory import OBJECTS_FACTORY
 
 # Import component modules so their @component decorators register the classes.
-# Add new DAO/service modules here for them to be wired at startup.
+# Add new DAO/service/facade modules here for them to be wired at startup.
 import end_points.dao.end_points_dao  # noqa: F401
 import end_points.service.end_points_svc  # noqa: F401
+import vector_store.openai_ingest_facade  # noqa: F401
 
 LOGGER = logging.getLogger(__name__)
 

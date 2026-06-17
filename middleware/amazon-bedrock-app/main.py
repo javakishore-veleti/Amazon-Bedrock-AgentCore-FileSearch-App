@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
 from common.base_classes import BaseReqDto, BaseRespDto
-from ingest.api.ingest_controller import router as ingest_router
+from vector_store.api.ingest_controller import router as ingest_router
 from end_points.api.end_points_controller import router as end_points_router
 from bootstrap import register_services
 

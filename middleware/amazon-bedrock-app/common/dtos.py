@@ -6,8 +6,8 @@ class IngestReq(BaseReqDto):
 
     file_path: str
     file_type: str
-    # Default vector store, can be extended to support multiple stores.
-    target_vector_store: str = "openai"
+    # Target vector store: an end point name from configs.end_points_master.
+    target_vector_store: str = "OpenAPI Vector Store"
 
 
 class IngestResp(BaseRespDto):
