@@ -17,3 +17,18 @@ class IngestResp(BaseRespDto):
     target_vector_store: str
     file_path: str
     message: str
+
+
+class VectorIngestReq(BaseReqDto):
+    """Input to a vector store adapter's ingest()."""
+
+    file_path: str
+    file_type: str
+
+
+class VectorIngestResp(BaseRespDto):
+    """Output of a vector store adapter's ingest()."""
+
+    status: str = ""
+    message: str = ""
+    ingested_count: int = 0

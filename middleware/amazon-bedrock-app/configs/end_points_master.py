@@ -10,6 +10,9 @@ impl should annotate itself with the matching constant, e.g.
 ``@component(key=OPENAPI_VECTOR_STORE)``.
 """
 
+# Cache type / end point category for all vector stores.
+VECTOR_STORE_TYPE = "vector_store"
+
 # Object ids == @component keys for each (planned) vector-store impl.
 OPENAPI_VECTOR_STORE = "OpenApiVectorStoreImpl"
 AWS_OPENSEARCH = "AwsOpenSearchVectorStoreImpl"
