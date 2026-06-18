@@ -78,3 +78,27 @@ class DatasetBatchFileDao:
 
     def read_batches(self, input_dir: str) -> list:
         raise NotImplementedError
+
+
+class JobExecutionRepository:
+    """Persists every API/workflow execution and the lineage between them."""
+
+    def create(self, job_id: str, job_type: str) -> int:
+        raise NotImplementedError
+
+    def update(self, job_id: str, status: str, result: str = None,
+               error: str = None) -> None:
+        raise NotImplementedError
+
+    def mark_latest_picked_up(self, consumed_job_type: str,
+                              picked_up_by_id: int) -> None:
+        raise NotImplementedError
+
+    def get_by_job_id(self, job_id: str):
+        raise NotImplementedError
+
+    def latest(self, job_type: str):
+        raise NotImplementedError
+
+    def list(self, limit: int = 100) -> list:
+        raise NotImplementedError

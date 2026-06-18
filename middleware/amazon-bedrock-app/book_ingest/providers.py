@@ -13,3 +13,7 @@ def get_vector_store_ingest_facade():
 
 def get_async_job_service():
     return OBJECTS_FACTORY.get("AsyncJobService")
+
+
+def get_book_pipeline_facade():
+    return OBJECTS_FACTORY.get("BookPipelineFacade")

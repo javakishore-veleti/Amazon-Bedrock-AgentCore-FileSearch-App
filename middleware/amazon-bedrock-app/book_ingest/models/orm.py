@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import (
     BigInteger,
+    Boolean,
     DateTime,
     ForeignKey,
     Integer,
@@ -90,5 +91,26 @@ class VectorIngestTarget(Base):
     retry_count: Mapped[int] = mapped_column(Integer, default=0)
     error_message: Mapped[str | None] = mapped_column(Text)
     indexed_at: Mapped[datetime | None] = mapped_column(DateTime)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime)
+
+
+class JobExecution(Base):
+    """One row per API/workflow execution. ``picked_up_by_id`` self-references
+    the execution that consumed this one, so executions form a lineage chain
+    (dataset_build -> manifest_build -> ingest_pending)."""
+
+    __tablename__ = "job_execution"
+
+    id: Mapped[int] = mapped_column(PrimaryKey, primary_key=True, autoincrement=True)
+    job_id: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+    job_type: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(Text, nullable=False)
+    result: Mapped[str | None] = mapped_column(Text)
+    error: Mapped[str | None] = mapped_column(Text)
+    picked_up: Mapped[bool] = mapped_column(Boolean, default=False)
+    picked_up_by_id: Mapped[int | None] = mapped_column(
+        BigInteger, ForeignKey("job_execution.id")
+    )
     created_at: Mapped[datetime | None] = mapped_column(DateTime)
     updated_at: Mapped[datetime | None] = mapped_column(DateTime)

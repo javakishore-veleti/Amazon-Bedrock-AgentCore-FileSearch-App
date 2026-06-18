@@ -12,6 +12,7 @@ from book_ingest.models.dtos import (
     IngestStatusResp,
     ManifestBuildReq,
     ManifestBuildResp,
+    RunAllReq,
 )
 
 
@@ -33,4 +34,9 @@ class VectorStoreIngestFacade:
         raise NotImplementedError
 
     def status(self) -> IngestStatusResp:
+        raise NotImplementedError
+
+
+class BookPipelineFacade:
+    def run_all(self, req: RunAllReq) -> dict:
         raise NotImplementedError

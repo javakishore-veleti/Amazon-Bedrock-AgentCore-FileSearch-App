@@ -8,7 +8,18 @@ class JobAcceptedResp(BaseRespDto):
     job_id: str = ""
     job_type: str = ""
     status: str = "running"
+    status_url: str = ""
     message: str = ""
+
+
+class RunAllReq(BaseReqDto):
+    """One-click full pipeline: dataset build -> manifest -> ingest."""
+
+    target_count: int = 1000
+    vector_stores: list[str] = []
+    consumer_count: int = 5
+    limit: int = 1000
+    overwrite: bool = True
 
 
 class JobStatusResp(BaseRespDto):
@@ -17,6 +28,8 @@ class JobStatusResp(BaseRespDto):
     status: str = ""
     result: Optional[dict] = None
     error: Optional[str] = None
+    picked_up: Optional[bool] = None
+    picked_up_by_id: Optional[int] = None
 
 
 # ---- Dataset builder ----

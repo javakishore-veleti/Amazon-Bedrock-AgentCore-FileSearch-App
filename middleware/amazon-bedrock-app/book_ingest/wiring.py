@@ -12,6 +12,7 @@ import book_ingest.dao.target_repo  # noqa: F401
 import book_ingest.dao.section_repo  # noqa: F401
 import book_ingest.dao.log_repo  # noqa: F401
 import book_ingest.dao.batch_file_dao  # noqa: F401
+import book_ingest.dao.job_execution_repo  # noqa: F401
 
 # integrations
 import book_ingest.integrations.gutenberg.client  # noqa: F401
@@ -36,3 +37,4 @@ import book_ingest.messaging.consumer.manager  # noqa: F401
 import book_ingest.messaging.consumer.book_ingestion_facade  # noqa: F401
 import book_ingest.facade.dataset_manifest_build_facade  # noqa: F401
 import book_ingest.facade.vector_store_ingest_facade  # noqa: F401
+import book_ingest.facade.pipeline_facade  # noqa: F401
