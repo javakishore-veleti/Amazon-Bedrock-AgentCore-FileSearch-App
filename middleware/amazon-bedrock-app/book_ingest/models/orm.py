@@ -114,3 +114,14 @@ class JobExecution(Base):
     )
     created_at: Mapped[datetime | None] = mapped_column(DateTime)
     updated_at: Mapped[datetime | None] = mapped_column(DateTime)
+
+
+class AppState(Base):
+    """Small key/value store for app-managed state that must survive restarts,
+    e.g. an auto-created vector store id (so redeploys don't recreate it)."""
+
+    __tablename__ = "app_state"
+
+    key: Mapped[str] = mapped_column(Text, primary_key=True)
+    value: Mapped[str | None] = mapped_column(Text)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime)

@@ -16,14 +16,18 @@ class OpenAIVectorStoreIngestFacade(VectorStoreAdapter):
     def __init__(self, openai_client):
         self.openai_client = openai_client
 
+    def ensure_store(self, store_name: str) -> str:
+        return self.openai_client.ensure_vector_store(store_name)
+
     def ingest(self, req: VectorIngestReq, resp: VectorIngestResp):
         if not req.file_path or not os.path.exists(req.file_path):
             resp.status = "skipped"
             resp.message = "No file to ingest"
             return resp
 
-        vector_store_id = self.openai_client.ensure_vector_store(
-            req.vector_store_id, req.attributes.get("title", "Book Vector Store")
+        # Use the id ensured at queue time; fall back to ensuring one.
+        vector_store_id = req.vector_store_id or self.openai_client.ensure_vector_store(
+            "Book Vector Store"
         )
         file_id, status = self.openai_client.upload_and_attach(
             file_path=req.file_path,

@@ -1,8 +1,10 @@
 import logging
 import os
+import threading
 
 from book_ingest.config.settings import BookIngestSettings
 from common.di import component
+from common.interfaces.book_repositories import AppStateRepository
 
 LOGGER = logging.getLogger(__name__)
 
@@ -10,17 +12,21 @@ _CHUNKING_STRATEGY = {
     "type": "static",
     "static": {"max_chunk_size_tokens": 1000, "chunk_overlap_tokens": 200},
 }
+_STATE_KEY = "openai_vector_store_id"
 
 
-@component(key="OpenAIVectorStoreClient", depends_on=["BookIngestSettings"])
+@component(key="OpenAIVectorStoreClient",
+           depends_on=["BookIngestSettings", "AppStateRepository"])
 class OpenAIVectorStoreClient:
-    """Thin wrapper over the OpenAI SDK: upload a file and attach it to a
-    vector store. The SDK client is created lazily so the app boots without
-    credentials."""
+    """Thin wrapper over the OpenAI SDK. Lazily creates the SDK client and the
+    vector store, persisting an auto-created store id so redeploys / new
+    machines reuse it instead of creating duplicates."""
 
-    def __init__(self, settings: BookIngestSettings):
+    def __init__(self, settings: BookIngestSettings, app_state: AppStateRepository):
         self.settings = settings
+        self.app_state = app_state
         self._client = None
+        self._lock = threading.Lock()
 
     def _client_or_raise(self):
         if self._client is None:
@@ -31,13 +37,26 @@ class OpenAIVectorStoreClient:
             self._client = OpenAI(api_key=api_key)
         return self._client
 
-    def ensure_vector_store(self, vector_store_id: str, name: str) -> str:
-        if vector_store_id:
-            return vector_store_id
-        client = self._client_or_raise()
-        vs = client.vector_stores.create(name=name)
-        LOGGER.info("Created OpenAI vector store %s (%s)", vs.id, name)
-        return vs.id
+    def ensure_vector_store(self, name: str) -> str:
+        """Return a usable vector store id, creating one if needed.
+
+        Order: configured id (env/config) -> persisted auto-created id ->
+        create a new store and persist its id.
+        """
+        configured = self.settings.openai_vector_store_id
+        if configured:
+            return configured
+        saved = self.app_state.get(_STATE_KEY)
+        if saved:
+            return saved
+        with self._lock:
+            saved = self.app_state.get(_STATE_KEY)
+            if saved:
+                return saved
+            vs = self._client_or_raise().vector_stores.create(name=name)
+            self.app_state.set(_STATE_KEY, vs.id)
+            LOGGER.info("Created OpenAI vector store %s (%s)", vs.id, name)
+            return vs.id
 
     def upload_and_attach(self, file_path: str, vector_store_id: str,
                           attributes: dict) -> tuple[str, str]:

@@ -80,6 +80,16 @@ class DatasetBatchFileDao:
         raise NotImplementedError
 
 
+class AppStateRepository:
+    """Persisted key/value app state (e.g. auto-created vector store ids)."""
+
+    def get(self, key: str) -> str | None:
+        raise NotImplementedError
+
+    def set(self, key: str, value: str) -> None:
+        raise NotImplementedError
+
+
 class JobExecutionRepository:
     """Persists every API/workflow execution and the lineage between them."""
 

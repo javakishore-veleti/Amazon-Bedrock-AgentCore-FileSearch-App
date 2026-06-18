@@ -13,6 +13,7 @@ import book_ingest.dao.section_repo  # noqa: F401
 import book_ingest.dao.log_repo  # noqa: F401
 import book_ingest.dao.batch_file_dao  # noqa: F401
 import book_ingest.dao.job_execution_repo  # noqa: F401
+import book_ingest.dao.app_state_repo  # noqa: F401
 
 # integrations
 import book_ingest.integrations.gutenberg.client  # noqa: F401

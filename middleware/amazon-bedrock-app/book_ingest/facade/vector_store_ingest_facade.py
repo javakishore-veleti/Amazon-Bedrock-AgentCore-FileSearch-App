@@ -9,7 +9,7 @@ from book_ingest.models.dtos import (
     IngestPendingResp,
     IngestStatusResp,
 )
-from configs.end_points_master import OPENAPI_VECTOR_STORE, VECTOR_STORE_TYPE
+from configs.end_points_master import VECTOR_STORE_TYPE
 
 LOGGER = logging.getLogger(__name__)
 
@@ -47,11 +47,15 @@ class VectorStoreIngestFacadeImpl(VectorStoreIngestFacade):
                 message="No requested vector stores are available/registered",
             )
 
+        # Ensure-store task: make sure each target store exists (create if not),
+        # once, before processing the books.
+        store_ids = {store: self._ensure_store(store) for store in stores}
+
         books = self.manifest_repo.find_pending_books(req.limit)
         queued = 0
         for book in books:
             for store in stores:
-                vs_id = self._vector_store_id_for(store)
+                vs_id = store_ids[store]
                 target_id = self.target_repo.upsert_queued(book["id"], store, vs_id)
                 self.publisher.publish(BookIngestMessage(
                     manifest_id=book["id"],
@@ -92,8 +96,8 @@ class VectorStoreIngestFacadeImpl(VectorStoreIngestFacade):
         object_id = self.app_cache.get(VECTOR_STORE_TYPE, store_name)
         return bool(object_id) and OBJECTS_FACTORY.has(object_id)
 
-    def _vector_store_id_for(self, store_name: str) -> str:
+    def _ensure_store(self, store_name: str) -> str:
+        """Resolve the store's adapter and ensure its backing store exists."""
         object_id = self.app_cache.get(VECTOR_STORE_TYPE, store_name)
-        if object_id == OPENAPI_VECTOR_STORE:
-            return self.settings.openai_vector_store_id
-        return ""
+        adapter = OBJECTS_FACTORY.get(object_id)
+        return adapter.ensure_store(store_name)
