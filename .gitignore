@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Book ingest runtime artifacts
+/middleware/amazon-bedrock-app/data/
+data/
+DataSets/

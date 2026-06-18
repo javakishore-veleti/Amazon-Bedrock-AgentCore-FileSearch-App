@@ -1,4 +1,5 @@
 import logging
+import os
 
 from common.di import component
 from common.dtos import VectorIngestReq, VectorIngestResp
@@ -8,15 +9,30 @@ from configs.end_points_master import OPENAPI_VECTOR_STORE
 LOGGER = logging.getLogger(__name__)
 
 
-@component(key=OPENAPI_VECTOR_STORE)
+@component(key=OPENAPI_VECTOR_STORE, depends_on=["OpenAIVectorStoreClient"])
 class OpenAIVectorStoreIngestFacade(VectorStoreAdapter):
-    def __init__(self, vector_store_client=None):
-        self.vector_store_client = vector_store_client
+    """Ingests a cleaned text file into an OpenAI Vector Store."""
+
+    def __init__(self, openai_client):
+        self.openai_client = openai_client
 
     def ingest(self, req: VectorIngestReq, resp: VectorIngestResp):
-        LOGGER.info("OpenAI vector store ingest: %s", req.file_path)
-        # TODO: load + chunk req.file_path, embed, and push to the OpenAI
-        # vector store via self.vector_store_client.
-        resp.status = "accepted"
-        resp.message = "Ingestion accepted; pipeline not yet implemented"
+        if not req.file_path or not os.path.exists(req.file_path):
+            resp.status = "skipped"
+            resp.message = "No file to ingest"
+            return resp
+
+        vector_store_id = self.openai_client.ensure_vector_store(
+            req.vector_store_id, req.attributes.get("title", "Book Vector Store")
+        )
+        file_id, status = self.openai_client.upload_and_attach(
+            file_path=req.file_path,
+            vector_store_id=vector_store_id,
+            attributes=req.attributes,
+        )
+        resp.provider_file_id = file_id
+        resp.status = status or "completed"
+        resp.message = "Indexed into OpenAI vector store"
+        resp.ingested_count = 1
+        LOGGER.info("OpenAI ingest complete: file_id=%s status=%s", file_id, status)
         return resp

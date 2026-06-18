@@ -1,0 +1,29 @@
+dataset:
+  novels:
+    batch_output_dir: DataSets/Novels/BatchFiles
+    raw_dir: DataSets/Novels/Raw
+    processed_dir: DataSets/Novels/Processed
+    batch_size: 1000
+
+database:
+  type: sqlite
+  url: sqlite:///./data/vector_ingest.db
+  migration_tool: alembic
+
+queue:
+  type: in_memory
+
+ingest:
+  consumer_count: 10
+  max_retries: 3
+  poll_interval_seconds: 2
+  # Default vector stores to ingest into (END_POINTS_MASTER names).
+  target_vector_stores:
+    - OpenAPI Vector Store
+
+openai:
+  vector_store_id: ""
+
+gutenberg:
+  top_100_url: https://www.gutenberg.org/browse/scores/top
+  user_agent: BookVectorIngest/1.0
