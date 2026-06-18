@@ -1,4 +1,22 @@
+from typing import Optional
+
 from common.base_classes import BaseReqDto, BaseRespDto
+
+
+# ---- Async jobs ----
+class JobAcceptedResp(BaseRespDto):
+    job_id: str = ""
+    job_type: str = ""
+    status: str = "running"
+    message: str = ""
+
+
+class JobStatusResp(BaseRespDto):
+    job_id: str = ""
+    job_type: str = ""
+    status: str = ""
+    result: Optional[dict] = None
+    error: Optional[str] = None
 
 
 # ---- Dataset builder ----

@@ -17,6 +17,7 @@ from end_points.api.end_points_controller import router as end_points_router
 from book_ingest.api.dataset_controller import router as book_dataset_router
 from book_ingest.api.manifest_controller import router as book_manifest_router
 from book_ingest.api.ingest_controller import router as book_ingest_router
+from book_ingest.api.jobs_controller import router as book_jobs_router
 from bootstrap import register_services
 
 
@@ -51,6 +52,7 @@ tags_metadata = [
     {"name": "book-dataset", "description": "Build Gutenberg dataset batch files."},
     {"name": "book-manifest", "description": "Build the ingestion manifest from batch files."},
     {"name": "book-ingest", "description": "Queue pending books and run concurrent ingestion."},
+    {"name": "jobs", "description": "Poll status of async jobs (dataset/manifest/ingest)."},
 ]
 
 @asynccontextmanager
@@ -83,6 +85,7 @@ app.include_router(end_points_router)
 app.include_router(book_dataset_router)
 app.include_router(book_manifest_router)
 app.include_router(book_ingest_router)
+app.include_router(book_jobs_router)
 
 # AWS Bedrock client
 bedrock_client = None

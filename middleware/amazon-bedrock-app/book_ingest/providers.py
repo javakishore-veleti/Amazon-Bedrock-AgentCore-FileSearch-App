@@ -9,3 +9,7 @@ def get_dataset_manifest_build_facade():
 
 def get_vector_store_ingest_facade():
     return OBJECTS_FACTORY.get("VectorStoreIngestFacade")
+
+
+def get_async_job_service():
+    return OBJECTS_FACTORY.get("AsyncJobService")
