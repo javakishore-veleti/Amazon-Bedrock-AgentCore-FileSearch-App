@@ -2,6 +2,7 @@ import logging
 from datetime import datetime, timezone
 
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 
 from common.interfaces.book_repositories import VectorIngestManifestRepository
 from book_ingest.db.database import BookIngestDatabase
@@ -53,10 +54,15 @@ class VectorIngestManifestRepositoryImpl(VectorIngestManifestRepository):
                 try:
                     s.commit()
                     inserted += 1
-                except Exception as exc:  # unique txt_url race
+                except IntegrityError as exc:
                     s.rollback()
-                    LOGGER.warning("Skipping duplicate txt_url %s: %s", txt_url, exc)
-                    skipped += 1
+                    # Only a unique-key clash is a real duplicate; anything else
+                    # (e.g. a schema problem) must surface, not be hidden.
+                    if "UNIQUE constraint" in str(exc):
+                        LOGGER.info("Skipping duplicate txt_url %s", txt_url)
+                        skipped += 1
+                    else:
+                        raise
         return {"inserted": inserted, "skipped": skipped}
 
     def find_pending_books(self, limit) -> list:
