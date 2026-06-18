@@ -25,19 +25,19 @@ from langgraph.graph import END, START, StateGraph
 from book_ingest.facade.interfaces import BookIngestionFacade
 from book_ingest.models.domain import BookIngestMessage
 from book_ingest.models.task_dtos import BookIngestTaskReq
-from book_ingest.facade.tasks.check_existing import CheckExistingIngestionTask
-from book_ingest.facade.tasks.clean_text import CleanTextTask
-from book_ingest.facade.tasks.duplicate_check import DuplicateCheckTask
-from book_ingest.facade.tasks.extract_metadata import ExtractMetadataTask
-from book_ingest.facade.tasks.fetch_text import FetchTextTask
-from book_ingest.facade.tasks.finalize import FinalizeTask
-from book_ingest.facade.tasks.lock_and_log import LockAndLogTask
-from book_ingest.facade.tasks.skip_duplicate import SkipDuplicateTask
-from book_ingest.facade.tasks.split_sections import SplitSectionsTask
-from book_ingest.facade.tasks.store_processed import StoreProcessedTask
-from book_ingest.facade.tasks.store_raw import StoreRawTask
-from book_ingest.facade.tasks.upload import UploadToVectorStoreTask
-from book_ingest.facade.tasks.validate_message import ValidateMessageTask
+from book_ingest.messaging.consumer.tasks.check_existing import CheckExistingIngestionTask
+from book_ingest.messaging.consumer.tasks.clean_text import CleanTextTask
+from book_ingest.messaging.consumer.tasks.duplicate_check import DuplicateCheckTask
+from book_ingest.messaging.consumer.tasks.extract_metadata import ExtractMetadataTask
+from book_ingest.messaging.consumer.tasks.fetch_text import FetchTextTask
+from book_ingest.messaging.consumer.tasks.finalize import FinalizeTask
+from book_ingest.messaging.consumer.tasks.lock_and_log import LockAndLogTask
+from book_ingest.messaging.consumer.tasks.skip_duplicate import SkipDuplicateTask
+from book_ingest.messaging.consumer.tasks.split_sections import SplitSectionsTask
+from book_ingest.messaging.consumer.tasks.store_processed import StoreProcessedTask
+from book_ingest.messaging.consumer.tasks.store_raw import StoreRawTask
+from book_ingest.messaging.consumer.tasks.upload import UploadToVectorStoreTask
+from book_ingest.messaging.consumer.tasks.validate_message import ValidateMessageTask
 from common.di import component
 
 LOGGER = logging.getLogger(__name__)

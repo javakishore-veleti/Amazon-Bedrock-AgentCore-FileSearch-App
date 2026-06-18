@@ -8,7 +8,7 @@ from book_ingest.dao.interfaces import (
 )
 from book_ingest.models.statuses import ManifestStatus
 from book_ingest.models.task_dtos import BookIngestTaskReq, BookIngestTaskResp
-from book_ingest.facade.tasks.base import BookIngestTask
+from book_ingest.messaging.consumer.tasks.base import BookIngestTask
 from common.dtos import VectorIngestReq, VectorIngestResp
 from common.interfaces.app_cache import AppCacheSvc
 from common.objects_factory import OBJECTS_FACTORY

@@ -4,6 +4,7 @@ from pathlib import Path
 
 import yaml
 
+from book_ingest.config.paths import resolve_path
 from common.di import component
 
 LOGGER = logging.getLogger(__name__)
@@ -40,17 +41,18 @@ class BookIngestSettings:
 
     @property
     def batch_output_dir(self) -> str:
-        return self.get("dataset", "novels", "batch_output_dir",
-                        default="DataSets/Novels/BatchFiles")
+        return resolve_path(self.get("dataset", "novels", "batch_output_dir",
+                                     default="DataSets/Novels/BatchFiles"))
 
     @property
     def raw_dir(self) -> str:
-        return self.get("dataset", "novels", "raw_dir", default="DataSets/Novels/Raw")
+        return resolve_path(self.get("dataset", "novels", "raw_dir",
+                                     default="DataSets/Novels/Raw"))
 
     @property
     def processed_dir(self) -> str:
-        return self.get("dataset", "novels", "processed_dir",
-                        default="DataSets/Novels/Processed")
+        return resolve_path(self.get("dataset", "novels", "processed_dir",
+                                     default="DataSets/Novels/Processed"))
 
     @property
     def batch_size(self) -> int:

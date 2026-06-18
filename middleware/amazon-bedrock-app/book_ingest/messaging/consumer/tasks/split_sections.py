@@ -3,7 +3,7 @@ import re
 
 from book_ingest.dao.interfaces import VectorIngestSectionRepository
 from book_ingest.models.task_dtos import BookIngestTaskReq, BookIngestTaskResp
-from book_ingest.facade.tasks.base import BookIngestTask
+from book_ingest.messaging.consumer.tasks.base import BookIngestTask
 
 LOGGER = logging.getLogger(__name__)
 

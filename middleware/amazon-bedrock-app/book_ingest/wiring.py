@@ -30,7 +30,7 @@ import book_ingest.messaging.publisher.in_memory  # noqa: F401
 import book_ingest.messaging.consumer.manager  # noqa: F401
 
 # facades
-import book_ingest.facade.book_ingestion_facade  # noqa: F401
+import book_ingest.messaging.consumer.book_ingestion_facade  # noqa: F401
 import book_ingest.facade.dataset_manifest_build_facade  # noqa: F401
 import book_ingest.facade.vector_store_ingest_facade  # noqa: F401
 import book_ingest.facade.ingest_status_facade  # noqa: F401
