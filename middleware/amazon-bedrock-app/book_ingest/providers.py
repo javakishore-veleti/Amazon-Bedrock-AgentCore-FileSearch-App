@@ -9,7 +9,3 @@ def get_dataset_manifest_build_facade():
 
 def get_vector_store_ingest_facade():
     return OBJECTS_FACTORY.get("VectorStoreIngestFacade")
-
-
-def get_ingest_status_facade():
-    return OBJECTS_FACTORY.get("IngestStatusFacade")

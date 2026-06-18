@@ -32,7 +32,5 @@ class VectorStoreIngestFacade:
     def queue_pending(self, req: IngestPendingReq) -> IngestPendingResp:
         raise NotImplementedError
 
-
-class IngestStatusFacade:
     def status(self) -> IngestStatusResp:
         raise NotImplementedError

@@ -1,10 +1,14 @@
 import logging
 
-from common.interfaces.book_facades import VectorStoreIngestFacade
-from book_ingest.models.domain import BookIngestMessage
-from book_ingest.models.dtos import IngestPendingReq, IngestPendingResp
 from common.di import component
+from common.interfaces.book_facades import VectorStoreIngestFacade
 from common.objects_factory import OBJECTS_FACTORY
+from book_ingest.models.domain import BookIngestMessage
+from book_ingest.models.dtos import (
+    IngestPendingReq,
+    IngestPendingResp,
+    IngestStatusResp,
+)
 from configs.end_points_master import OPENAPI_VECTOR_STORE, VECTOR_STORE_TYPE
 
 LOGGER = logging.getLogger(__name__)
@@ -17,17 +21,19 @@ LOGGER = logging.getLogger(__name__)
         "VectorIngestTargetRepository",
         "IngestMessagePublisher",
         "IngestConsumerManager",
+        "IngestQueueFacade",
         "AppCacheSvc",
         "BookIngestSettings",
     ],
 )
 class VectorStoreIngestFacadeImpl(VectorStoreIngestFacade):
     def __init__(self, manifest_repo, target_repo, publisher, consumer_manager,
-                 app_cache, settings):
+                 queue_facade, app_cache, settings):
         self.manifest_repo = manifest_repo
         self.target_repo = target_repo
         self.publisher = publisher
         self.consumer_manager = consumer_manager
+        self.queue_facade = queue_facade
         self.app_cache = app_cache
         self.settings = settings
 
@@ -73,6 +79,13 @@ class VectorStoreIngestFacadeImpl(VectorStoreIngestFacade):
             request_id=req.request_id, status="accepted", queued_count=queued,
             consumer_started=started_any, consumer_count=consumer_count,
             vector_stores=stores, message="Pending books queued for ingestion",
+        )
+
+    def status(self) -> IngestStatusResp:
+        return IngestStatusResp(
+            counts_by_status=self.manifest_repo.count_by_status(),
+            consumers_running=self.consumer_manager.running(),
+            queue_depth=self.queue_facade.all_depths(),
         )
 
     def _is_available(self, store_name: str) -> bool:
