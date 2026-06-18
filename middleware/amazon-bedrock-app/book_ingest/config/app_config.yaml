@@ -7,7 +7,8 @@ dataset:
 
 database:
   type: sqlite
-  url: sqlite:///./data/vector_ingest.db
+  # Stored outside the codebase, under the repo-root DataSets folder.
+  path: DataSets/db/vector_ingest.db
   migration_tool: alembic
 
 queue:

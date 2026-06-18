@@ -60,7 +60,13 @@ class BookIngestSettings:
 
     @property
     def database_url(self) -> str:
-        return self.get("database", "url", default="sqlite:///./data/vector_ingest.db")
+        # An explicit url (e.g. BOOK_INGEST_DB_URL or a Postgres url) wins.
+        url = self.get("database", "url")
+        if url:
+            return url
+        # Otherwise build a SQLite url under the repo-root DataSets folder.
+        path = self.get("database", "path", default="DataSets/db/vector_ingest.db")
+        return f"sqlite:///{resolve_path(path)}"
 
     @property
     def consumer_count(self) -> int:

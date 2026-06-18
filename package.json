@@ -9,7 +9,7 @@
     "localhost:daily:start": "\"$HOME/runtime_data/python_venvs/Amazon-Bedrock-AgentCore-FileSearch-App/bin/pip\" install -r requirements.txt && npm run localhost:python:venv:activate",
     "localhost:python:venv:activate": "exec \"$SHELL\" -c 'source \"$HOME/runtime_data/python_venvs/Amazon-Bedrock-AgentCore-FileSearch-App/bin/activate\" && exec \"$SHELL\"'",
     "localhost:middle:start-all": "cd middleware/amazon-bedrock-app && \"$HOME/runtime_data/python_venvs/Amazon-Bedrock-AgentCore-FileSearch-App/bin/python\" main.py",
-    "localhost:middle:clean-db-only": "rm -f middleware/amazon-bedrock-app/data/*.db* && echo 'Cleaned: SQLite DB (middleware/amazon-bedrock-app/data)'",
+    "localhost:middle:clean-db-only": "rm -rf DataSets/db && echo 'Cleaned: SQLite DB (DataSets/db)'",
     "localhost:middle:clean-datasets-only": "rm -rf DataSets/Novels/BatchFiles DataSets/Novels/Raw DataSets/Novels/Processed && echo 'Cleaned: DataSets/Novels (BatchFiles, Raw, Processed)'",
     "localhost:middle:clean-db-datasets": "npm run localhost:middle:clean-db-only && npm run localhost:middle:clean-datasets-only"
   }
