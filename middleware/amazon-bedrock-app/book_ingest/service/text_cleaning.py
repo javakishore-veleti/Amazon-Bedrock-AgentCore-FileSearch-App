@@ -1,7 +1,7 @@
 import logging
 import re
 
-from book_ingest.service.interfaces import GutenbergTextCleaningService
+from common.interfaces.book_services import GutenbergTextCleaningService
 from common.di import component
 
 LOGGER = logging.getLogger(__name__)

@@ -1,8 +1,8 @@
 import hashlib
 import logging
 
-from book_ingest.dao.interfaces import VectorIngestTargetRepository
-from book_ingest.service.interfaces import DuplicateDetectionService
+from common.interfaces.book_repositories import VectorIngestTargetRepository
+from common.interfaces.book_services import DuplicateDetectionService
 from common.di import component
 
 LOGGER = logging.getLogger(__name__)

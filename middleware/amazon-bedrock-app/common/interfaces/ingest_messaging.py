@@ -1,5 +1,10 @@
-"""Queue abstraction. Named queues let each vector store have its own queue
-(and therefore its own consumers), so stores scale independently."""
+"""Book-ingest messaging interfaces: queue + publisher.
+
+Named queues let each vector store have its own queue (and consumers), so
+stores scale independently.
+"""
+
+from book_ingest.models.domain import BookIngestMessage
 
 
 class IngestQueueFacade:
@@ -20,4 +25,9 @@ class IngestQueueFacade:
         raise NotImplementedError
 
     def all_depths(self) -> dict:
+        raise NotImplementedError
+
+
+class IngestMessagePublisher:
+    def publish(self, message: BookIngestMessage) -> None:
         raise NotImplementedError

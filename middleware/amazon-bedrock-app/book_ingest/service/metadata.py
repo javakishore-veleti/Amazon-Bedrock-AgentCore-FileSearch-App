@@ -2,7 +2,7 @@ import logging
 import re
 
 from book_ingest.models.domain import BookIngestMessage
-from book_ingest.service.interfaces import BookMetadataExtractionService
+from common.interfaces.book_services import BookMetadataExtractionService
 from common.di import component
 
 LOGGER = logging.getLogger(__name__)

@@ -3,7 +3,7 @@ import queue
 import threading
 from collections import defaultdict
 
-from book_ingest.messaging.queue.interfaces import IngestQueueFacade
+from common.interfaces.ingest_messaging import IngestQueueFacade
 from common.di import component
 
 LOGGER = logging.getLogger(__name__)

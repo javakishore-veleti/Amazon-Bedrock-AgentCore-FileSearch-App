@@ -2,7 +2,7 @@ import logging
 
 from book_ingest.integrations.gutenberg.client import GutenbergClient
 from book_ingest.models.task_dtos import BookIngestTaskReq, BookIngestTaskResp
-from book_ingest.messaging.consumer.tasks.base import BookIngestTask
+from common.interfaces.book_task import BookIngestTask
 
 LOGGER = logging.getLogger(__name__)
 

@@ -3,7 +3,7 @@ import os
 
 from book_ingest.config.settings import BookIngestSettings
 from book_ingest.models.task_dtos import BookIngestTaskReq, BookIngestTaskResp
-from book_ingest.messaging.consumer.tasks.base import BookIngestTask
+from common.interfaces.book_task import BookIngestTask
 
 LOGGER = logging.getLogger(__name__)
 

@@ -1,11 +1,11 @@
 import logging
 
-from book_ingest.dao.interfaces import (
+from common.interfaces.book_repositories import (
     DatasetBatchFileDao,
     VectorIngestManifestRepository,
 )
 from book_ingest.models.dtos import ManifestBuildReq, ManifestBuildResp
-from book_ingest.service.interfaces import ManifestBuildService
+from common.interfaces.book_services import ManifestBuildService
 from common.di import component
 
 LOGGER = logging.getLogger(__name__)

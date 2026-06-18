@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timezone
 
-from book_ingest.dao.interfaces import VectorIngestSectionRepository
+from common.interfaces.book_repositories import VectorIngestSectionRepository
 from book_ingest.db.database import BookIngestDatabase
 from book_ingest.models.orm import VectorIngestSection
 from common.di import component

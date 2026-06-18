@@ -22,7 +22,7 @@ from typing import Optional, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from book_ingest.facade.interfaces import BookIngestionFacade
+from common.interfaces.book_facades import BookIngestionFacade
 from book_ingest.models.domain import BookIngestMessage
 from book_ingest.models.task_dtos import BookIngestTaskReq
 from book_ingest.messaging.consumer.tasks.check_existing import CheckExistingIngestionTask

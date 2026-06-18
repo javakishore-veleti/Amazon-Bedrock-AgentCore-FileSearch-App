@@ -1,6 +1,6 @@
 import logging
 
-from book_ingest.facade.interfaces import IngestStatusFacade
+from common.interfaces.book_facades import IngestStatusFacade
 from book_ingest.models.dtos import IngestStatusResp
 from common.di import component
 

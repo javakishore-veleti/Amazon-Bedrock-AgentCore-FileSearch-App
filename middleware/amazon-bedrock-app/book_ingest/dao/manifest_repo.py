@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import func, select
 
-from book_ingest.dao.interfaces import VectorIngestManifestRepository
+from common.interfaces.book_repositories import VectorIngestManifestRepository
 from book_ingest.db.database import BookIngestDatabase
 from book_ingest.models.orm import VectorIngestManifest, VectorIngestTarget
 from book_ingest.models.statuses import ManifestStatus

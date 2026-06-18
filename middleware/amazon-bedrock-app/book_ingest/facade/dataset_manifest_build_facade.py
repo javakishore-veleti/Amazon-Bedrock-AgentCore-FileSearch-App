@@ -1,6 +1,6 @@
 import logging
 
-from book_ingest.facade.interfaces import DatasetManifestBuildFacade
+from common.interfaces.book_facades import DatasetManifestBuildFacade
 from book_ingest.models.dtos import (
     DatasetBuildReq,
     DatasetBuildResp,

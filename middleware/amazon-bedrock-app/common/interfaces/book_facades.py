@@ -1,4 +1,7 @@
-"""Facade layer interfaces (use-case orchestration)."""
+"""Book-ingest facade interfaces (use-case orchestration).
+
+Kept under common/interfaces with the rest of the project's interfaces.
+"""
 
 from book_ingest.models.domain import BookIngestMessage
 from book_ingest.models.dtos import (
@@ -21,7 +24,7 @@ class DatasetManifestBuildFacade:
 
 
 class BookIngestionFacade:
-    def ingest_one(self, message: BookIngestMessage) -> dict:
+    def ingest_one(self, message: BookIngestMessage, target_vector_db: str = None) -> dict:
         raise NotImplementedError
 
 

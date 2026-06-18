@@ -5,7 +5,7 @@ import os
 import re
 
 from book_ingest.config.paths import resolve_path
-from book_ingest.dao.interfaces import DatasetBatchFileDao
+from common.interfaces.book_repositories import DatasetBatchFileDao
 from common.di import component
 
 LOGGER = logging.getLogger(__name__)

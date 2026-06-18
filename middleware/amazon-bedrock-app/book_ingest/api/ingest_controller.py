@@ -2,7 +2,7 @@ import logging
 
 from fastapi import APIRouter, Depends
 
-from book_ingest.facade.interfaces import IngestStatusFacade, VectorStoreIngestFacade
+from common.interfaces.book_facades import IngestStatusFacade, VectorStoreIngestFacade
 from book_ingest.models.dtos import (
     IngestPendingReq,
     IngestPendingResp,

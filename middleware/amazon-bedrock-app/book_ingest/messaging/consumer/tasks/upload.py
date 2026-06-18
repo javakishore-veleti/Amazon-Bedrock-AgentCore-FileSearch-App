@@ -2,13 +2,13 @@ import logging
 import os
 import tempfile
 
-from book_ingest.dao.interfaces import (
+from common.interfaces.book_repositories import (
     VectorIngestManifestRepository,
     VectorIngestTargetRepository,
 )
 from book_ingest.models.statuses import ManifestStatus
 from book_ingest.models.task_dtos import BookIngestTaskReq, BookIngestTaskResp
-from book_ingest.messaging.consumer.tasks.base import BookIngestTask
+from common.interfaces.book_task import BookIngestTask
 from common.dtos import VectorIngestReq, VectorIngestResp
 from common.interfaces.app_cache import AppCacheSvc
 from common.objects_factory import OBJECTS_FACTORY

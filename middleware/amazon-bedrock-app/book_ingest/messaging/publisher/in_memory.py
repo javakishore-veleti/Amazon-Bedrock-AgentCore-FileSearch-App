@@ -1,7 +1,7 @@
 import logging
 
-from book_ingest.messaging.publisher.interfaces import IngestMessagePublisher
-from book_ingest.messaging.queue.interfaces import IngestQueueFacade
+from common.interfaces.ingest_messaging import IngestMessagePublisher
+from common.interfaces.ingest_messaging import IngestQueueFacade
 from book_ingest.models.domain import BookIngestMessage
 from common.di import component
 

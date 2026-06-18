@@ -1,12 +1,12 @@
 import logging
 
-from book_ingest.dao.interfaces import VectorIngestManifestRepository
+from common.interfaces.book_repositories import VectorIngestManifestRepository
 from book_ingest.models.task_dtos import BookIngestTaskReq, BookIngestTaskResp
-from book_ingest.service.interfaces import (
+from common.interfaces.book_services import (
     BookMetadataExtractionService,
     DuplicateDetectionService,
 )
-from book_ingest.messaging.consumer.tasks.base import BookIngestTask
+from common.interfaces.book_task import BookIngestTask
 
 LOGGER = logging.getLogger(__name__)
 

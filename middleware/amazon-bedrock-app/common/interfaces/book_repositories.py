@@ -1,4 +1,4 @@
-"""Database-independent DAO interfaces (swappable per database config)."""
+"""Book-ingest DAO/repository interfaces (swappable per database config)."""
 
 
 class VectorIngestManifestRepository:

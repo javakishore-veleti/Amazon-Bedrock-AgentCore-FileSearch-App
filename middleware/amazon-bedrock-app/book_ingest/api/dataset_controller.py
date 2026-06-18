@@ -2,7 +2,7 @@ import logging
 
 from fastapi import APIRouter, Depends
 
-from book_ingest.facade.interfaces import DatasetManifestBuildFacade
+from common.interfaces.book_facades import DatasetManifestBuildFacade
 from book_ingest.models.dtos import DatasetBuildResp, DatasetBuildReq
 from book_ingest.providers import get_dataset_manifest_build_facade
 

@@ -1,4 +1,4 @@
-"""Service layer interfaces (business logic)."""
+"""Book-ingest service interfaces (business logic)."""
 
 from book_ingest.models.domain import BookIngestMessage
 from book_ingest.models.dtos import (

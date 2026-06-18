@@ -2,10 +2,10 @@ import logging
 from datetime import datetime, timezone
 
 from book_ingest.config.settings import BookIngestSettings
-from book_ingest.dao.interfaces import DatasetBatchFileDao
+from common.interfaces.book_repositories import DatasetBatchFileDao
 from book_ingest.integrations.gutenberg.client import GutenbergClient
 from book_ingest.models.dtos import DatasetBuildReq, DatasetBuildResp
-from book_ingest.service.interfaces import GutenbergDatasetBuildService
+from common.interfaces.book_services import GutenbergDatasetBuildService
 from common.di import component
 
 LOGGER = logging.getLogger(__name__)
