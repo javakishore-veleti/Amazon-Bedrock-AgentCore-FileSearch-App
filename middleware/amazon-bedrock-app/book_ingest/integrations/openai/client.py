@@ -74,3 +74,39 @@ class OpenAIVectorStoreClient:
         if last_error:
             raise RuntimeError(f"OpenAI indexing error: {last_error}")
         return uploaded.id, status
+
+    def search(
+        self,
+        vector_store_id: str,
+        query: str,
+        top_k: int = 5,
+        filters: dict | None = None,
+    ) -> list[dict]:
+        """Run a semantic search against an OpenAI vector store."""
+        client = self._client_or_raise()
+        kwargs: dict = {"query": query, "max_num_results": top_k}
+        if filters:
+            kwargs["filters"] = filters
+        page = client.vector_stores.search(vector_store_id=vector_store_id, **kwargs)
+        hits: list[dict] = []
+        for item in page.data:
+            hits.append({
+                "text": self._extract_hit_text(item),
+                "score": float(getattr(item, "score", 0.0) or 0.0),
+                "metadata": dict(getattr(item, "attributes", None) or {}),
+                "provider_file_id": getattr(item, "file_id", "") or "",
+            })
+        return hits
+
+    @staticmethod
+    def _extract_hit_text(item) -> str:
+        content = getattr(item, "content", None) or []
+        parts: list[str] = []
+        for chunk in content:
+            text = getattr(chunk, "text", None)
+            if text:
+                parts.append(text)
+                continue
+            if isinstance(chunk, dict) and chunk.get("text"):
+                parts.append(chunk["text"])
+        return "\n".join(parts)

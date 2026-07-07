@@ -1,4 +1,4 @@
-from common.dtos import VectorIngestReq, VectorIngestResp
+from common.dtos import VectorIngestReq, VectorIngestResp, VectorSearchReq, VectorSearchResp
 
 
 class VectorStoreAdapter:
@@ -11,3 +11,6 @@ class VectorStoreAdapter:
 
     def ingest(self, req: VectorIngestReq, resp: VectorIngestResp):
         raise NotImplementedError("This method should be implemented by subclasses")
+
+    def search(self, req: VectorSearchReq, resp: VectorSearchResp):
+        raise NotImplementedError("search() is not implemented for this vector store")

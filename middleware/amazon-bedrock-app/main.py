@@ -12,27 +12,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
-from common.base_classes import BaseReqDto, BaseRespDto
 from end_points.api.end_points_controller import router as end_points_router
 from book_ingest.api.dataset_controller import router as book_dataset_router
 from book_ingest.api.manifest_controller import router as book_manifest_router
 from book_ingest.api.ingest_controller import router as book_ingest_router
 from book_ingest.api.jobs_controller import router as book_jobs_router
+from search.api.search_controller import router as search_router
 from bootstrap import register_services
-
-
-class SearchReq(BaseReqDto):
-    """Request body for a file search."""
-
-    query: str
-
-
-class SearchResp(BaseRespDto):
-    """Result of a file search."""
-
-    results: list
-    query: str
-    message: str
 
 # Load environment variables
 load_dotenv()
@@ -48,7 +34,7 @@ logger = logging.getLogger(__name__)
 tags_metadata = [
     {"name": "health", "description": "Service liveness checks."},
     {"name": "files", "description": "List and retrieve searchable files."},
-    {"name": "search", "description": "Search files using the Bedrock agent."},
+    {"name": "search", "description": "Search ingested books in the vector store."},
     {"name": "book-dataset", "description": "Build Gutenberg dataset batch files."},
     {"name": "book-manifest", "description": "Build the ingestion manifest from batch files."},
     {"name": "book-ingest", "description": "Queue pending books and run concurrent ingestion."},
@@ -86,6 +72,7 @@ app.include_router(book_dataset_router)
 app.include_router(book_manifest_router)
 app.include_router(book_ingest_router)
 app.include_router(book_jobs_router)
+app.include_router(search_router)
 
 # AWS Bedrock client
 bedrock_client = None
@@ -133,19 +120,6 @@ async def list_files():
     except Exception as e:
         logger.error(f"Error listing files: {e}")
         return {"error": str(e)}, 500
-
-
-@app.post("/api/search", response_model=SearchResp, tags=["search"])
-async def search_files(req: SearchReq) -> SearchResp:
-    """Search files using Bedrock agent"""
-    # TODO: Implement Bedrock agent invocation
-    logger.info(f"Received search query: {req.query}")
-
-    return SearchResp(
-        results=[],
-        query=req.query,
-        message="Search functionality not yet implemented",
-    )
 
 
 @app.get("/api/files/{file_id}", tags=["files"])
