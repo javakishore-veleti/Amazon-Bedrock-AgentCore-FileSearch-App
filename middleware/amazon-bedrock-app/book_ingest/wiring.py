@@ -18,6 +18,8 @@ import book_ingest.dao.app_state_repo  # noqa: F401
 # integrations
 import book_ingest.integrations.gutenberg.client  # noqa: F401
 import book_ingest.integrations.openai.client  # noqa: F401
+import book_ingest.integrations.pgvector.embeddings  # noqa: F401
+import book_ingest.integrations.pgvector.client  # noqa: F401
 
 # jobs
 import book_ingest.jobs.job_service  # noqa: F401

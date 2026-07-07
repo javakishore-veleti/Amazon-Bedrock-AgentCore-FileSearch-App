@@ -156,6 +156,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+# DevOps shell profile scripts (committed); personal secrets stay local
+!DevOps/env/
+!DevOps/env/**
+DevOps/env/secrets.local.sh
 
 # Spyder project settings
 .spyderproject

@@ -9,7 +9,7 @@ Early-stage scaffold for a file-search service built on Amazon Bedrock Agent Cor
 ## Commands
 
 ```bash
-# First-time setup (creates venv, installs deps, copies .env.example -> .env)
+# First-time setup (creates venv, installs deps)
 bash DevOps/setup.sh
 
 # Activate the environment before running anything
@@ -32,7 +32,7 @@ flake8 middleware/
 mypy middleware/
 ```
 
-Note: the README references a `Makefile` and `make dev`/`make test` targets, but no Makefile exists in the repo — use the commands above directly. `.env` is required at the working-directory root (loaded via `load_dotenv()` from wherever the process starts); run from the repo root.
+Note: the README references a `Makefile` and `make dev`/`make test` targets, but no Makefile exists in the repo — use the commands above directly. Configuration uses layered YAML profiles under `middleware/amazon-bedrock-app/config/`; set `APP_PROFILE` (default `local`) and export secrets as environment variables. See `config/README.md`.
 
 ## Architecture
 
@@ -42,4 +42,4 @@ Note: the README references a `Makefile` and `make dev`/`make test` targets, but
 
 ## Configuration
 
-All runtime config comes from `.env` (see `.env.example`). Key variables: `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `BEDROCK_MODEL_ID`, `BEDROCK_AGENT_ALIAS_ID`, `PYTHON_PORT`, `DEBUG`, `LOG_LEVEL`, and file-search limits (`MAX_FILE_SIZE_MB`, `SUPPORTED_FILE_TYPES`).
+Runtime config is loaded from layered YAML profiles in `middleware/amazon-bedrock-app/config/`. The only bootstrap selector is `APP_PROFILE` (default `local`). Secrets (API keys, DB passwords) are supplied via environment variables — see `middleware/amazon-bedrock-app/config/README.md`.

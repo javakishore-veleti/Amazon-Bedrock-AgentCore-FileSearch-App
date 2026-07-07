@@ -1,0 +1,5 @@
+# Optional OpenTelemetry stack — install only when OTEL_ENABLED=true
+-r requirements.txt
+opentelemetry-api>=1.27.0
+opentelemetry-sdk>=1.27.0
+opentelemetry-exporter-otlp-proto-grpc>=1.27.0

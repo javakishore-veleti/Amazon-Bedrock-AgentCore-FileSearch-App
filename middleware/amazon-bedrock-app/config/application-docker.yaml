@@ -1,0 +1,30 @@
+# Local Docker Compose stack (APP_PROFILE=docker).
+
+app:
+  debug: false
+
+observability:
+  otel_enabled: false
+  otel_exporter_otlp_endpoint: http://otel-collector:4317
+
+database:
+  url: postgresql://postgres:postgres@postgres:5432/filesearch
+
+vector_store:
+  provider: pgvector
+  pgvector:
+    schema: ingest_ops
+    table: document_embeddings
+    embedding_dimension: 384
+    embedding_model: all-MiniLM-L6-v2
+
+book_ingest:
+  database:
+    type: postgres
+    url: postgresql://postgres:postgres@postgres:5432/filesearch
+  ingest:
+    target_vector_stores:
+      - PgVector
+
+  queue:
+    type: in_memory

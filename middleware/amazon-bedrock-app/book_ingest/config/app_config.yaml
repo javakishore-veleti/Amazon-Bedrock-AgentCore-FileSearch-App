@@ -1,3 +1,6 @@
+# Deprecated: settings moved to middleware/amazon-bedrock-app/config/application.yaml
+# This file is kept for reference only; BookIngestSettings reads from AppSettings.
+
 dataset:
   novels:
     batch_output_dir: DataSets/Novels/BatchFiles
@@ -7,7 +10,6 @@ dataset:
 
 database:
   type: sqlite
-  # Stored outside the codebase, under the repo-root DataSets folder.
   path: DataSets/db/vector_ingest.db
   migration_tool: alembic
 
@@ -18,7 +20,6 @@ ingest:
   consumer_count: 10
   max_retries: 3
   poll_interval_seconds: 2
-  # Default vector stores to ingest into (END_POINTS_MASTER names).
   target_vector_stores:
     - OpenAPI Vector Store
 

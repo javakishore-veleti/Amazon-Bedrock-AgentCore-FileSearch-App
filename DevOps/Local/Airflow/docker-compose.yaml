@@ -1,0 +1,38 @@
+# Airflow local stack (v1 stub).
+#
+# Full Airflow (webserver, scheduler, workers, Redis, etc.) is intentionally
+# not enabled by default — it is heavy for local laptops. Uncomment and tune
+# the services below when you are ready, then start with:
+#   AIRFLOW_ENABLED=1 bash DevOps/Local/docker-all-up.sh
+#
+# All services must use container_name prefix filesearch-local-airflow-* and
+# join the external network filesearch-local-net.
+
+networks:
+  filesearch-local-net:
+    external: true
+
+# services:
+#   airflow-webserver:
+#     image: apache/airflow:2.9.3
+#     container_name: filesearch-local-airflow-webserver
+#     networks:
+#       - filesearch-local-net
+#     ports:
+#       - "8080:8080"
+#     environment:
+#       AIRFLOW__CORE__EXECUTOR: LocalExecutor
+#       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:postgres@filesearch-local-postgres:5432/airflow
+#     depends_on:
+#       - airflow-init
+#
+#   airflow-scheduler:
+#     image: apache/airflow:2.9.3
+#     container_name: filesearch-local-airflow-scheduler
+#     networks:
+#       - filesearch-local-net
+#     environment:
+#       AIRFLOW__CORE__EXECUTOR: LocalExecutor
+#       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:postgres@filesearch-local-postgres:5432/airflow
+#     depends_on:
+#       - airflow-init

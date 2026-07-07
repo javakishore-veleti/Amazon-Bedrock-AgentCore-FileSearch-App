@@ -19,6 +19,7 @@ import common.caching.service.app_cache_svc  # noqa: F401
 import end_points.dao.end_points_dao  # noqa: F401
 import end_points.service.end_points_svc  # noqa: F401
 import vector_store.adapters.openai_ingest_facade  # noqa: F401
+import vector_store.adapters.pgvector_ingest_facade  # noqa: F401
 import book_ingest.wiring  # noqa: F401  (registers all book_ingest components)
 import search.wiring  # noqa: F401
 

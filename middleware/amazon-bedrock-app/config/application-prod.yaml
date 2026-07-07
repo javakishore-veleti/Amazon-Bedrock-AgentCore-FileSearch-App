@@ -1,0 +1,19 @@
+# Production stub — override endpoints and disable debug before deploy.
+
+app:
+  debug: false
+  log_level: INFO
+
+observability:
+  otel_enabled: false   # default off (cost); set true only for incident debugging
+  log_json: true
+  log_level: INFO
+  otel_exporter_otlp_endpoint: https://otel-collector.example.com:4317
+
+database:
+  url: postgresql://postgres:CHANGE_ME@postgres:5432/file_search
+
+book_ingest:
+  database:
+    type: postgres
+    url: postgresql://postgres:CHANGE_ME@postgres:5432/file_search

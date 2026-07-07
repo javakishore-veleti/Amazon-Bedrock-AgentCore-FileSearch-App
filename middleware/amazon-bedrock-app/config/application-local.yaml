@@ -1,0 +1,27 @@
+# Laptop / bare-metal development (default APP_PROFILE=local).
+
+app:
+  debug: true
+  log_level: DEBUG
+
+observability:
+  log_level: DEBUG
+
+database:
+  url: postgresql://postgres:postgres@localhost:5432/filesearch
+
+vector_store:
+  provider: pgvector
+  pgvector:
+    schema: ingest_ops
+    table: document_embeddings
+    embedding_dimension: 384
+    embedding_model: all-MiniLM-L6-v2
+
+book_ingest:
+  database:
+    type: sqlite
+    path: DataSets/db/vector_ingest.db
+  ingest:
+    target_vector_stores:
+      - PgVector

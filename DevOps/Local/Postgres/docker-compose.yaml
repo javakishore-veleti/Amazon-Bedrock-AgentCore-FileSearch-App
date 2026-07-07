@@ -1,0 +1,33 @@
+# Postgres 16 for local filesearch development.
+# Joins the shared external network filesearch-local-net.
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: filesearch-local-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: filesearch
+    volumes:
+      - filesearch-local-postgres-data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - filesearch-local-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d filesearch"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  filesearch-local-net:
+    external: true
+
+volumes:
+  filesearch-local-postgres-data:
+    name: filesearch-local-postgres-data

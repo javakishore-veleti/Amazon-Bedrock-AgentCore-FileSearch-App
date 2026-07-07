@@ -1,0 +1,74 @@
+# Shared defaults for all profiles.
+# Profile-specific overrides live in application-{profile}.yaml.
+# Secrets are empty here; inject via environment variables (see config/README.md).
+
+app:
+  debug: false
+  python_port: 8000
+  log_level: INFO
+
+observability:
+  otel_enabled: false
+  log_level: INFO
+  log_json: false
+  otel_service_name: filesearch-api
+  otel_exporter_otlp_endpoint: http://localhost:4317
+
+aws:
+  region: us-east-1
+  access_key_id: ""
+  secret_access_key: ""
+
+bedrock:
+  model_id: anthropic.claude-v2
+  agent_alias_id: ""
+
+database:
+  url: ""
+
+vector_store:
+  provider: pgvector
+  openai:
+    api_key: ""
+    org_id: ""
+    base_url: https://api.openai.com/v1
+    vector_store_id: ""
+  pgvector:
+    schema: ingest_ops
+    table: document_embeddings
+    embedding_dimension: 384
+    embedding_model: all-MiniLM-L6-v2
+
+file_search:
+  max_file_size_mb: 100
+  supported_file_types: ".pdf,.txt,.json,.csv,.docx"
+
+book_ingest:
+  dataset:
+    novels:
+      batch_output_dir: DataSets/Novels/BatchFiles
+      raw_dir: DataSets/Novels/Raw
+      processed_dir: DataSets/Novels/Processed
+      batch_size: 1000
+
+  database:
+    type: sqlite
+    path: DataSets/db/vector_ingest.db
+    migration_tool: alembic
+
+  queue:
+    type: in_memory
+
+  ingest:
+    consumer_count: 10
+    max_retries: 3
+    poll_interval_seconds: 2
+    target_vector_stores:
+      - PgVector
+
+  openai:
+    vector_store_id: ""
+
+  gutenberg:
+    top_100_url: https://www.gutenberg.org/browse/scores/top
+    user_agent: BookVectorIngest/1.0

@@ -31,8 +31,8 @@ class EndPointMasterEntry:
         return f"EndPointMasterEntry(name={self.name!r}, object_id={self.object_id!r})"
 
 
-# All planned vector-store end points. Only OpenAPI is implemented so far; the
-# rest are placeholders whose impls will register under the same object ids.
+# All planned vector-store end points. OpenAPI and PgVector are implemented;
+# the rest are placeholders whose impls will register under the same object ids.
 END_POINTS_MASTER: list[EndPointMasterEntry] = [
     EndPointMasterEntry(name="OpenAPI Vector Store", object_id=OPENAPI_VECTOR_STORE),
     EndPointMasterEntry(name="AWS OpenSearch", object_id=AWS_OPENSEARCH),

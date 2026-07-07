@@ -1,35 +1,25 @@
 import logging
-import os
-from pathlib import Path
-
-import yaml
 
 from book_ingest.config.paths import resolve_path
 from common.di import component
+from config.app_settings import get_app_settings
 
 LOGGER = logging.getLogger(__name__)
-
-_DEFAULT_CONFIG = Path(__file__).with_name("app_config.yaml")
 
 
 @component(key="BookIngestSettings")
 class BookIngestSettings:
-    """Loads book_ingest config from YAML with selective env overrides."""
+    """Book ingest settings sourced from the shared profile configuration."""
 
     def __init__(self):
-        path = os.getenv("BOOK_INGEST_CONFIG", str(_DEFAULT_CONFIG))
-        with open(path) as fh:
-            self._cfg = yaml.safe_load(fh) or {}
-        self._apply_env_overrides()
-        LOGGER.info("Loaded book_ingest config from %s", path)
-
-    def _apply_env_overrides(self):
-        vs_id = os.getenv("VECTOR_DB_OPENAI_VECTOR_STORE_ID")
-        if vs_id:
-            self._cfg.setdefault("openai", {})["vector_store_id"] = vs_id
-        db_url = os.getenv("BOOK_INGEST_DB_URL")
-        if db_url:
-            self._cfg.setdefault("database", {})["url"] = db_url
+        app_settings = get_app_settings()
+        self._cfg = dict(app_settings.book_ingest)
+        self._database_url = app_settings.database.url
+        self._openai_vector_store_id = app_settings.vector_store.openai.vector_store_id
+        LOGGER.info(
+            "Loaded book_ingest config from profile '%s'",
+            app_settings.profile,
+        )
 
     def get(self, *keys, default=None):
         node = self._cfg
@@ -60,11 +50,9 @@ class BookIngestSettings:
 
     @property
     def database_url(self) -> str:
-        # An explicit url (e.g. BOOK_INGEST_DB_URL or a Postgres url) wins.
-        url = self.get("database", "url")
+        url = self.get("database", "url") or self._database_url
         if url:
             return url
-        # Otherwise build a SQLite url under the repo-root DataSets folder.
         path = self.get("database", "path", default="DataSets/db/vector_ingest.db")
         return f"sqlite:///{resolve_path(path)}"
 
@@ -82,12 +70,11 @@ class BookIngestSettings:
 
     @property
     def target_vector_stores(self) -> list[str]:
-        return self.get("ingest", "target_vector_stores",
-                        default=["OpenAPI Vector Store"])
+        return self.get("ingest", "target_vector_stores", default=["PgVector"])
 
     @property
     def openai_vector_store_id(self) -> str:
-        return self.get("openai", "vector_store_id", default="")
+        return self._openai_vector_store_id or self.get("openai", "vector_store_id", default="")
 
     @property
     def gutenberg_top_100_url(self) -> str:

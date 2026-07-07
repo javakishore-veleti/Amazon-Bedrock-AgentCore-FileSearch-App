@@ -3,10 +3,9 @@ Amazon Bedrock Agent Core File Search Application
 Main entry point for the Python backend service
 """
 
-import os
 import logging
 from contextlib import asynccontextmanager
-from dotenv import load_dotenv
+
 import boto3
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,15 +18,13 @@ from book_ingest.api.ingest_controller import router as book_ingest_router
 from book_ingest.api.jobs_controller import router as book_jobs_router
 from search.api.search_controller import router as search_router
 from bootstrap import register_services
+from common.observability import configure_observability
+from common.observability.http_middleware import RequestContextMiddleware
+from config.app_settings import get_app_settings, load_app_settings
 
-# Load environment variables
-load_dotenv()
-
-# Configure logging
-logging.basicConfig(
-    level=os.getenv('LOG_LEVEL', 'INFO'),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+# Startup order: profile → observability → (later) register_services in lifespan
+_app_settings = load_app_settings()
+configure_observability(_app_settings)
 logger = logging.getLogger(__name__)
 
 # OpenAPI tag metadata (controls grouping/order in Swagger UI)
@@ -65,6 +62,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(RequestContextMiddleware)
 
 # Register controllers / routers
 app.include_router(end_points_router)
@@ -82,10 +80,12 @@ def initialize_bedrock_client():
     """Initialize AWS Bedrock client"""
     global bedrock_client
     try:
-        bedrock_client = boto3.client(
-            'bedrock-agent-runtime',
-            region_name=os.getenv('AWS_REGION', 'us-east-1')
-        )
+        aws = get_app_settings().aws
+        client_kwargs: dict = {"region_name": aws.region}
+        if aws.access_key_id and aws.secret_access_key:
+            client_kwargs["aws_access_key_id"] = aws.access_key_id
+            client_kwargs["aws_secret_access_key"] = aws.secret_access_key
+        bedrock_client = boto3.client("bedrock-agent-runtime", **client_kwargs)
         logger.info("Bedrock client initialized successfully")
     except Exception as e:
         logger.error(f"Failed to initialize Bedrock client: {e}")
@@ -139,10 +139,12 @@ async def get_file(file_id: str):
 if __name__ == "__main__":
     import uvicorn
 
-    port = int(os.getenv('PYTHON_PORT', 8000))
-    debug = os.getenv('DEBUG', 'false').lower() == 'true'
+    app_cfg = get_app_settings().app
+    port = app_cfg.python_port
+    debug = app_cfg.debug
 
-    logger.info(f"Starting server on port {port} (debug: {debug})")
+    logger.info("Starting server on port %s (debug: %s, profile: %s)",
+                port, debug, get_app_settings().profile)
 
     uvicorn.run(
         "main:app",

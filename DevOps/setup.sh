@@ -18,19 +18,6 @@ if ! command -v python3 &> /dev/null; then
 fi
 echo "✓ Python $(python3 --version) found"
 
-# Setup .env file
-echo ""
-echo "Setting up environment variables..."
-if [ ! -f .env ]; then
-    if [ -f .env.example ]; then
-        cp .env.example .env
-        echo "✓ Created .env from .env.example"
-        echo "  ⚠ Please update .env with your AWS credentials"
-    fi
-else
-    echo "✓ .env file already exists"
-fi
-
 # Setup Python virtual environment
 echo ""
 echo "Setting up Python virtual environment..."
@@ -55,15 +42,20 @@ echo "  ✓ Setup Complete!"
 echo "═══════════════════════════════════════════════════════════"
 echo ""
 echo "Next steps:"
-echo "1. Update .env with your AWS credentials:"
-echo "   - AWS_REGION"
-echo "   - AWS_ACCESS_KEY_ID"
-echo "   - AWS_SECRET_ACCESS_KEY"
-echo "   - BEDROCK_MODEL_ID (e.g., anthropic.claude-v2)"
+echo "1. Configuration uses YAML profiles (default: local)."
+echo "   See middleware/amazon-bedrock-app/config/README.md"
 echo ""
-echo "2. To start development:"
-echo "   • Python: source venv/bin/activate && python middleware/amazon-bedrock-app/main.py"
-echo "   • Or use: make dev"
+echo "2. Export secrets as environment variables when needed, e.g.:"
+echo "   export VECTOR_DB_OPENAI_API_KEY=sk-..."
+echo "   export AWS_ACCESS_KEY_ID=..."
+echo "   export AWS_SECRET_ACCESS_KEY=..."
 echo ""
-echo "3. See README.md for more information"
+echo "3. Optional: select a profile"
+echo "   export APP_PROFILE=local    # default"
+echo "   export APP_PROFILE=docker"
+echo ""
+echo "4. To start development:"
+echo "   source venv/bin/activate && python middleware/amazon-bedrock-app/main.py"
+echo ""
+echo "5. See README.md for more information"
 echo ""

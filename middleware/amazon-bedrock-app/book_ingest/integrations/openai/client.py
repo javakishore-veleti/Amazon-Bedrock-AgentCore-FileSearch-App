@@ -1,10 +1,10 @@
 import logging
-import os
 import threading
 
 from book_ingest.config.settings import BookIngestSettings
 from common.di import component
 from common.interfaces.book_repositories import AppStateRepository
+from config.app_settings import get_app_settings
 
 LOGGER = logging.getLogger(__name__)
 
@@ -25,16 +25,22 @@ class OpenAIVectorStoreClient:
     def __init__(self, settings: BookIngestSettings, app_state: AppStateRepository):
         self.settings = settings
         self.app_state = app_state
+        self._openai_cfg = get_app_settings().vector_store.openai
         self._client = None
         self._lock = threading.Lock()
 
     def _client_or_raise(self):
         if self._client is None:
-            api_key = os.getenv("VECTOR_DB_OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
+            api_key = self._openai_cfg.api_key
             if not api_key:
                 raise RuntimeError("OpenAI API key not configured")
             from openai import OpenAI
-            self._client = OpenAI(api_key=api_key)
+            kwargs: dict = {"api_key": api_key}
+            if self._openai_cfg.base_url:
+                kwargs["base_url"] = self._openai_cfg.base_url
+            if self._openai_cfg.org_id:
+                kwargs["organization"] = self._openai_cfg.org_id
+            self._client = OpenAI(**kwargs)
         return self._client
 
     def ensure_vector_store(self, name: str) -> str:
